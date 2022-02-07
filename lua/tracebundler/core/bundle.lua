@@ -27,8 +27,7 @@ end
     bundled = ([=[
 %s
 _tracebundler_require["%s"] = function(...)
-%s
-end
+%send
 ]=]):format(bundled, module, M.indent(lines, 2))
 
     local alias_module = trace:alias_module()
@@ -63,7 +62,11 @@ function M.indent(lines, depth)
       table.insert(new_lines, ("%s%s"):format(indent, line))
     end
   end
-  return table.concat(new_lines, "\n")
+  local str = table.concat(new_lines, "\n")
+  if vim.endswith(str, "\n") then
+    return str
+  end
+  return str .. "\n"
 end
 
 return M

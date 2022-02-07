@@ -20,23 +20,23 @@ describe("execute()", function()
 
   it("return chunk that does not use global require() even if input function lncludes require()", function()
     local bundled, err = tracebundler.execute(function()
-      return require("tracebundler.lib.testlib.testdata.test1")
+      return require("tracebundler.testdata.test1")
     end, {
       path_filter = helper.path_filter,
     })
     assert.is_nil(err)
 
-    package.loaded["tracebundler.lib.testlib.testdata.test1"] = nil
+    package.loaded["tracebundler.testdata.test1"] = nil
 
     local f, load_err = loadstring(bundled)
     assert.is_nil(load_err)
     assert.is_same("test1", f())
-    assert.is_nil(package.loaded["tracebundler.lib.testlib.testdata.test1"])
+    assert.is_nil(package.loaded["tracebundler.testdata.test1"])
   end)
 
   it("return chunk that can require() by omitting .init", function()
     local bundled, err = tracebundler.execute(function()
-      return require("tracebundler.lib.testlib.testdata")
+      return require("tracebundler.testdata")
     end, {
       path_filter = helper.path_filter,
     })

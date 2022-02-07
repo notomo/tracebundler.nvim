@@ -7,10 +7,11 @@ bundles executed files as one lua chunk for debugging.
 ```lua
 local tracebundler = require("tracebundler")
 local bundled = tracebundler.execute(function()
-  return require("tracebundler.example").entry()
+  return require("tracebundler.testdata.example").entry()
 end, {
   path_filter = function(path)
-    return not path:match("tracebundler/example/ignored")
+    local matched = path:match("tracebundler")
+    return matched and not path:match("ignored")
   end,
 })
 
@@ -18,12 +19,12 @@ local bufnr = vim.api.nvim_create_buf(false, true)
 local lines = vim.split(bundled, "\n", true)
 vim.api.nvim_buf_set_lines(bufnr, 0, -1, false, lines)
 vim.bo[bufnr].filetype = "lua"
-vim.cmd([[vsplit | buffer ]] .. bufnr)
+vim.cmd([[buffer ]] .. bufnr)
 
 -- The following is the bundled chunk:
 
 -- local _tracebundler_require = {}
---
+-- 
 -- local global_require = require
 -- local require = function(name)
 --   local f = _tracebundler_require[name]
@@ -32,36 +33,33 @@ vim.cmd([[vsplit | buffer ]] .. bufnr)
 --   end
 --   return f(name)
 -- end
---
--- _tracebundler_require[""] = function(...)
---     return require("tracebundler.example").entry()
+-- 
+-- _tracebundler_require["tracebundler.example"] = function(...)
+--     return require("tracebundler.testdata.example").entry()
 -- end
---
--- _tracebundler_require["tracebundler.example.init"] = function(...)
+-- 
+-- _tracebundler_require["tracebundler.testdata.example.init"] = function(...)
 --   local M = {}
---
+-- 
 --   function M.entry()
---     local used = require("tracebundler.example.used").new()
---     require("tracebundler.example.ignored").start()
+--     local used = require("tracebundler.testdata.example.used").new()
+--     require("tracebundler.testdata.example.ignored").start()
 --     return used
 --   end
---
+-- 
 --   return M
---
 -- end
---
--- _tracebundler_require["tracebundler.example"] = _tracebundler_require["tracebundler.example.init"]
---
--- _tracebundler_require["tracebundler.example.used"] = function(...)
+-- 
+-- _tracebundler_require["tracebundler.testdata.example"] = _tracebundler_require["tracebundler.testdata.example.init"]
+-- 
+-- _tracebundler_require["tracebundler.testdata.example.used"] = function(...)
 --   local M = {}
---
+-- 
 --   function M.new()
 --     return {}
 --   end
---
+-- 
 --   return M
---
 -- end
---
--- return _tracebundler_require[""]("")
-```
+-- 
+-- return _tracebundler_require["tracebundler.example"]("tracebundler.example")```
