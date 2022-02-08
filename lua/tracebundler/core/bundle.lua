@@ -3,18 +3,24 @@ M.__index = M
 
 function M.bundle(raw_traces)
   -- TODO: loadfile, dofile
-  -- TODO: require once
 
   local bundled = [[
 local _tracebundler_require = {}
+local _tracebundler_loaded = {}
 
 local global_require = require
 local require = function(name)
+  local loaded = _tracebundler_loaded[name]
+  if loaded then
+    return loaded
+  end
   local f = _tracebundler_require[name]
   if not f then
     return global_require(name)
   end
-  return f(name)
+  local result = f(name)
+  _tracebundler_loaded[name] = result or true
+  return result
 end
 ]]
 

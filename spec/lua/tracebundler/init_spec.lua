@@ -46,4 +46,20 @@ describe("execute()", function()
     assert.is_nil(load_err)
     assert.is_same("init", f())
   end)
+
+  it("return chunk that can emulate package.loaded", function()
+    local bundled, err = tracebundler.execute(function()
+      require("tracebundler.testdata.mutate")
+      _G._tracebundler_mutated = 8888
+      require("tracebundler.testdata.mutate")
+      return _G._tracebundler_mutated
+    end, {
+      path_filter = helper.path_filter,
+    })
+    assert.is_nil(err)
+
+    local f, load_err = loadstring(bundled)
+    assert.is_nil(load_err)
+    assert.is_same(8888, f())
+  end)
 end)
