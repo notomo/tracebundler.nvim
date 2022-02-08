@@ -62,4 +62,5 @@ vim.cmd([[buffer ]] .. bufnr)
 --   return M
 -- end
 -- 
--- return _tracebundler_require["tracebundler.example"]("tracebundler.example")```
+-- return _tracebundler_require["tracebundler.example"]("tracebundler.example")
+```

@@ -5,9 +5,15 @@ local full_plugin_name = plugin_name .. ".nvim"
 local example_path = ("./spec/lua/%s/example.lua"):format(plugin_name)
 vim.o.runtimepath = vim.fn.getcwd() .. "," .. vim.o.runtimepath
 dofile(example_path)
-local example_lines = vim.tbl_map(function(line)
+local example_lines = vim.api.nvim_buf_get_lines(0, 0, -1, false)
+local example_f, err = loadstring(table.concat(example_lines, "\n"))
+if err then
+  error(err)
+end
+example_f()
+example_lines = vim.tbl_map(function(line)
   return "-- " .. line
-end, vim.api.nvim_buf_get_lines(0, 0, -1, false))
+end, example_lines)
 table.insert(example_lines, 1, "")
 table.insert(example_lines, 1, "-- The following is the bundled chunk:")
 table.insert(example_lines, 1, "")
@@ -71,7 +77,8 @@ bundles executed files as one lua chunk for debugging.
 ## Example
 
 ```lua
-%s%s```]]):format(full_plugin_name, exmaple, example_result)
+%s%s
+```]]):format(full_plugin_name, exmaple, example_result)
 
   local readme = io.open("README.md", "w")
   readme:write(content)
