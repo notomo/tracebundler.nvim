@@ -28,6 +28,25 @@ function M.iter(self)
   end
 end
 
+function M.merge(self, tbl)
+  local new_dict = M.new()
+  for k, v in self:iter() do
+    new_dict[k] = v
+  end
+  for k, v in pairs(tbl) do
+    new_dict[k] = v
+  end
+  return new_dict
+end
+
+function M.values(self)
+  local values = {}
+  for _, v in self:iter() do
+    table.insert(values, v)
+  end
+  return values
+end
+
 function M.__index(self, k)
   local method = M[k]
   if method then
