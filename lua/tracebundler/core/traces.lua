@@ -34,4 +34,23 @@ function M.all(self)
   return { unpack(raw_traces, 2) } -- 2 to exclude tracer's trace
 end
 
+function M.execute(f, opts)
+  vim.validate({ f = { f, "function" }, opts = { opts, "table" } })
+
+  local traces = M.new(opts.path_filter)
+  local original_hook = debug.gethook()
+  local entrypoint = debug.getinfo(f).source
+  debug.sethook(function()
+    local info = debug.getinfo(2)
+    traces:add(info, entrypoint == info.source)
+  end, "l")
+
+  local ok, err = pcall(f)
+  debug.sethook(original_hook)
+  if not ok then
+    return traces, err
+  end
+  return traces, nil
+end
+
 return M

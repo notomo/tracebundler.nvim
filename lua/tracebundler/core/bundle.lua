@@ -28,7 +28,7 @@ end
 %s
 _tracebundler_require["%s"] = function(...)
 %send
-]=]):format(bundled, module, M.indent(lines, 2))
+]=]):format(bundled, module, M._indent(lines, 2))
 
     local alias_module = trace:alias_module()
     if alias_module then
@@ -52,7 +52,7 @@ return _tracebundler_require["%s"]("%s")]=]):format(bundled, module_name, module
   return bundled
 end
 
-function M.indent(lines, depth)
+function M._indent(lines, depth)
   local indent = (" "):rep(depth)
   local new_lines = {}
   for _, line in ipairs(lines) do

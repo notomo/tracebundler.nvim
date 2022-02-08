@@ -3,7 +3,7 @@ M.__index = M
 
 function M.new(name, first_row, last_row, rows)
   local tbl = {
-    _name = name,
+    _name = name or "",
     _first_row = first_row,
     _last_row = last_row,
     _rows = rows or {},
@@ -16,8 +16,8 @@ function M.add(self, row)
   return M.new(self._name, self._first_row, self._last_row, rows)
 end
 
-function M.key(name, first_row, last_row)
-  return ("%d_%d_%s"):format(first_row, last_row, name)
+function M.key(self)
+  return ("%d_%d_%s"):format(self._first_row, self._last_row, self._name)
 end
 
 function M.ranged(self, lines)
