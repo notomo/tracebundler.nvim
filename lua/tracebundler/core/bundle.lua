@@ -19,8 +19,8 @@ local require = function(name)
     return global_require(name)
   end
   local result = f(name)
-  _tracebundler_loaded[name] = result or true
-  return result
+  _tracebundler_loaded[name] = result or package.loaded[name] or true
+  return _tracebundler_loaded[name]
 end
 ]]
 
