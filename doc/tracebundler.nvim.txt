@@ -44,53 +44,53 @@ EXAMPLES                                          *tracebundler.nvim-EXAMPLES*
 
   -- The following is the bundled chunk:
 
-  -- local _tracebundler_require = {}
-  -- local _tracebundler_loaded = {}
-  -- 
-  -- local global_require = require
-  -- local require = function(name)
-  --   local loaded = _tracebundler_loaded[name]
-  --   if loaded then
-  --     return loaded
-  --   end
-  --   local f = _tracebundler_require[name]
-  --   if not f then
-  --     return global_require(name)
-  --   end
-  --   local result = f(name)
-  --   _tracebundler_loaded[name] = result or true
-  --   return result
-  -- end
-  -- 
-  -- _tracebundler_require["tracebundler.example"] = function(...)
-  --     return require("tracebundler.testdata.example").entry()
-  -- end
-  -- 
-  -- _tracebundler_require["tracebundler.testdata.example.init"] = function(...)
-  --   local M = {}
-  -- 
-  --   function M.entry()
-  --     local used = require("tracebundler.testdata.example.used").new()
-  --     require("tracebundler.testdata.example.ignored").start()
-  --     return used
-  --   end
-  -- 
-  --   return M
-  -- end
-  -- 
-  -- _tracebundler_require["tracebundler.testdata.example"] = _tracebundler_require["tracebundler.testdata.example.init"]
-  -- 
-  -- _tracebundler_require["tracebundler.testdata.example.used"] = function(...)
-  --   local M = {}
-  -- 
-  --   function M.new()
-  --     return {}
-  --   end
-  -- 
-  --   return M
-  -- end
-  -- 
-  -- return _tracebundler_require["tracebundler.example"]("tracebundler.example")
+  local _tracebundler_require = {}
+  local _tracebundler_loaded = {}
+
+  local global_require = require
+  local require = function(name)
+    local loaded = _tracebundler_loaded[name]
+    if loaded then
+      return loaded
+    end
+    local f = _tracebundler_require[name]
+    if not f then
+      return global_require(name)
+    end
+    local result = f(name)
+    _tracebundler_loaded[name] = result or true
+    return result
+  end
+
+  _tracebundler_require["tracebundler.example"] = function(...)
+      return require("tracebundler.testdata.example").entry()
+  end
+
+  _tracebundler_require["tracebundler.testdata.example.init"] = function(...)
+    local M = {}
+
+    function M.entry()
+      local used = require("tracebundler.testdata.example.used").new()
+      require("tracebundler.testdata.example.ignored").start()
+      return used
+    end
+
+    return M
+  end
+
+  _tracebundler_require["tracebundler.testdata.example"] = _tracebundler_require["tracebundler.testdata.example.init"]
+
+  _tracebundler_require["tracebundler.testdata.example.used"] = function(...)
+    local M = {}
+
+    function M.new()
+      return {}
+    end
+
+    return M
+  end
+
+  return _tracebundler_require["tracebundler.example"]("tracebundler.example")
 <
 
 ==============================================================================

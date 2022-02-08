@@ -11,9 +11,6 @@ if err then
   error(err)
 end
 example_f()
-example_lines = vim.tbl_map(function(line)
-  return "-- " .. line
-end, example_lines)
 table.insert(example_lines, 1, "")
 table.insert(example_lines, 1, "-- The following is the bundled chunk:")
 table.insert(example_lines, 1, "")
