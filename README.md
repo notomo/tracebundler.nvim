@@ -27,7 +27,7 @@ vim.bo[bufnr].filetype = "lua"
 vim.cmd([[buffer ]] .. bufnr)
 ```
 
-The following is the bundled chunk.
+### Bundled chunk
 
 ```lua
 local _tracebundler_require = {}

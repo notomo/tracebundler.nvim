@@ -12,7 +12,6 @@ if err then
 end
 example_f()
 local example_result = table.concat(example_lines, "\n")
-local following_is_chunk = "The following is the bundled chunk."
 
 require("genvdoc").generate(full_plugin_name, {
   chapters = {
@@ -84,13 +83,9 @@ require("genvdoc").generate(full_plugin_name, {
         return ([[
 %s
 
-%s
+The following is the bundled chunk.
 
-%s]]):format(
-          util.help_code_block(vim.fn.trim(content, 2)),
-          following_is_chunk,
-          util.help_code_block(example_result)
-        )
+%s]]):format(util.help_code_block(vim.fn.trim(content, 2)), util.help_code_block(example_result))
       end,
     },
   },
@@ -111,11 +106,11 @@ bundles executed files as one lua chunk for debugging.
 ```lua
 %s```
 
-%s
+### Bundled chunk
 
 ```lua
 %s
-```]]):format(full_plugin_name, exmaple, following_is_chunk, example_result)
+```]]):format(full_plugin_name, exmaple, example_result)
 
   local readme = io.open("README.md", "w")
   readme:write(content)
