@@ -25,26 +25,10 @@ end
 ]]
 
   for _, trace in ipairs(raw_traces) do
-    local lines = trace:lines()
-    if not lines then
-      goto continue
+    local one = M._bundle_one(trace)
+    if one then
+      bundled = bundled .. one
     end
-    local module = trace:module()
-    bundled = ([=[
-%s
-_tracebundler_require["%s"] = function(...)
-%send
-]=]):format(bundled, module, M._indent(lines, 2))
-
-    local alias_module = trace:alias_module()
-    if alias_module then
-      bundled = ([=[
-%s
-_tracebundler_require["%s"] = _tracebundler_require["%s"]
-]=]):format(bundled, alias_module, module)
-    end
-
-    ::continue::
   end
 
   local entrypoint_trace = raw_traces[1]
@@ -53,6 +37,30 @@ _tracebundler_require["%s"] = _tracebundler_require["%s"]
     bundled = ([=[
 %s
 return _tracebundler_require["%s"]("%s")]=]):format(bundled, module_name, module_name)
+  end
+
+  return bundled
+end
+
+function M._bundle_one(trace)
+  local lines = trace:lines()
+  if not lines then
+    return nil
+  end
+
+  local module_path = trace:module()
+  local bundled = ([=[
+
+_tracebundler_require["%s"] = function(...)
+%send
+]=]):format(module_path, M._indent(lines, 2))
+
+  local alias_module = trace:alias_module()
+  if alias_module then
+    bundled = ([=[
+%s
+_tracebundler_require["%s"] = _tracebundler_require["%s"]
+]=]):format(bundled, alias_module, module_path)
   end
 
   return bundled
