@@ -67,10 +67,6 @@ local loadfile = function(name)
   return f
 end
 
-_tracebundler_require["tracebundler.example"] = function(...)
-    return require("tracebundler.testdata.example").entry()
-end
-
 _tracebundler_require["tracebundler.testdata.example.init"] = function(...)
   local M = {}
 
@@ -94,5 +90,8 @@ _tracebundler_require["tracebundler.testdata.example.used"] = function(...)
   return M
 end
 
-return _tracebundler_require["tracebundler.example"]("tracebundler.example")
+local _tracebundler_entrypoint = function()
+  return require("tracebundler.testdata.example").entry()
+end
+return _tracebundler_entrypoint()
 ```

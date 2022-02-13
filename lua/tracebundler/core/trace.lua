@@ -3,18 +3,18 @@ local Calls = require("tracebundler.core.calls")
 local M = {}
 M.__index = M
 
-function M.new(path, is_entrypoint, calls)
+function M.new(path, calls)
+  vim.validate({ path = { path, "string" } })
   local tbl = {
     path = path,
-    _is_entrypoint = is_entrypoint,
     _calls = calls or Calls.new(),
   }
   return setmetatable(tbl, M)
 end
 
-function M.add(self, name, current_row, first_row, last_row)
-  local calls = self._calls:add(name, current_row, first_row, last_row)
-  return M.new(self.path, self._is_entrypoint, calls)
+function M.add(self, info)
+  local calls = self._calls:add(info.name, info.currentline, info.linedefined, info.lastlinedefined)
+  return M.new(self.path, calls)
 end
 
 function M.lines(self)
@@ -24,12 +24,12 @@ function M.lines(self)
   end
   local content = f:read("*a")
   f:close()
-  local lines = vim.split(content, "\n", true)
-  if self._is_entrypoint then
-    -- HACK
-    return self._calls:ranged(lines)
-  end
-  return lines
+  return vim.split(content, "\n", true)
+end
+
+function M.ranged_lines(self)
+  local lines = self:lines()
+  return self._calls:ranged(lines)
 end
 
 function M.module(self)

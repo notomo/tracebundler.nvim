@@ -1,7 +1,7 @@
 local M = {}
 M.__index = M
 
-function M.bundle(raw_traces, bundle_opts)
+function M.bundle(traces, bundle_opts)
   local bundled = [[
 local _tracebundler_require = {}
 local _tracebundler_loaded = {}
@@ -48,20 +48,19 @@ local loadfile = function(name)
 end
 ]]
 
-  for _, trace in ipairs(raw_traces) do
+  local entrypoint, others = traces:all()
+  for _, trace in ipairs(others) do
     local one = M._bundle_one(trace, bundle_opts)
     if one then
       bundled = bundled .. one
     end
   end
 
-  local entrypoint_trace = raw_traces[1]
-  if entrypoint_trace then
-    local module_name = entrypoint_trace:module()
-    bundled = ([=[
+  bundled = ([=[
 %s
-return _tracebundler_require["%s"]("%s")]=]):format(bundled, module_name, module_name)
-  end
+local _tracebundler_entrypoint = function()
+%send
+return _tracebundler_entrypoint()]=]):format(bundled, M._indent(entrypoint:ranged_lines(), 0))
 
   return bundled
 end
