@@ -9,10 +9,15 @@ local tracebundler = require("tracebundler")
 local bundled = tracebundler.execute(function()
   return require("tracebundler.testdata.example").entry()
 end, {
-  path_filter = function(path)
-    local matched = path:match("tracebundler")
-    return matched and not path:match("ignored")
-  end,
+  trace = {
+    path_filter = function(path)
+      local matched = path:match("tracebundler")
+      return matched and not path:match("ignored")
+    end,
+  },
+  bundle = {
+    enalbed_file_loader = false,
+  },
 })
 
 local bufnr = vim.api.nvim_create_buf(false, true)
@@ -39,32 +44,6 @@ local require = function(name)
   local result = f(name)
   _tracebundler_loaded[name] = result or package.loaded[name] or true
   return _tracebundler_loaded[name]
-end
-
-local _tracebundler_file = {}
-
-local global_dofile = dofile
-local dofile = function(name)
-  if not name then
-    return global_dofile()
-  end
-  local f = _tracebundler_file[name]
-  if not f then
-    return global_dofile()
-  end
-  return f()
-end
-
-local global_loadfile = loadfile
-local loadfile = function(name)
-  if not name then
-    return global_loadfile()
-  end
-  local f = _tracebundler_file[name]
-  if not f then
-    return global_loadfile()
-  end
-  return f
 end
 
 _tracebundler_require["tracebundler.testdata.example.init"] = function(...)

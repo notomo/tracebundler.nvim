@@ -2,10 +2,15 @@ local tracebundler = require("tracebundler")
 local bundled = tracebundler.execute(function()
   return require("tracebundler.testdata.example").entry()
 end, {
-  path_filter = function(path)
-    local matched = path:match("tracebundler")
-    return matched and not path:match("ignored")
-  end,
+  trace = {
+    path_filter = function(path)
+      local matched = path:match("tracebundler")
+      return matched and not path:match("ignored")
+    end,
+  },
+  bundle = {
+    enalbed_file_loader = false,
+  },
 })
 
 local bufnr = vim.api.nvim_create_buf(false, true)

@@ -35,12 +35,17 @@ require("genvdoc").generate(full_plugin_name, {
         local opts_text
         do
           local descriptions = {
-            path_filter = [[(function | nil): if return true, the chunk includes the file.
-    default: `function(file_path) return true end`]],
-            bundle = {
-              text = [[(table | nil): bundle setting]],
+            trace = {
+              text = [[(table): trace setting]],
               children = {
-                enabled_file_loader = [[if true, chunk supports dofile and loadfile.
+                path_filter = [[(function): if return true, the chunk includes the file.
+    default: `function(file_path) return true end`]],
+              },
+            },
+            bundle = {
+              text = [[(table): bundle setting]],
+              children = {
+                enabled_file_loader = [[(boolean): if true, chunk supports dofile, loadfile.
     default: %s]],
               },
             },

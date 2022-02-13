@@ -9,7 +9,7 @@ describe("execute()", function()
     local bundled, err = tracebundler.execute(function()
       return 8888
     end, {
-      path_filter = helper.path_filter,
+      trace = { path_filter = helper.path_filter },
     })
     assert.is_nil(err)
 
@@ -22,7 +22,7 @@ describe("execute()", function()
     local bundled, err = tracebundler.execute(function()
       return require("tracebundler.testdata.test1")
     end, {
-      path_filter = helper.path_filter,
+      trace = { path_filter = helper.path_filter },
     })
     assert.is_nil(err)
 
@@ -38,7 +38,7 @@ describe("execute()", function()
     local bundled, err = tracebundler.execute(function()
       return require("tracebundler.testdata")
     end, {
-      path_filter = helper.path_filter,
+      trace = { path_filter = helper.path_filter },
     })
     assert.is_nil(err)
 
@@ -54,7 +54,7 @@ describe("execute()", function()
       require("tracebundler.testdata.mutate")
       return _G._tracebundler_mutated
     end, {
-      path_filter = helper.path_filter,
+      trace = { path_filter = helper.path_filter },
     })
     assert.is_nil(err)
 
@@ -69,7 +69,7 @@ describe("execute()", function()
       _G._tracebundler_mutated = 8888
       return require("tracebundler.testdata.mutate_with_return_nil")
     end, {
-      path_filter = helper.path_filter,
+      trace = { path_filter = helper.path_filter },
     })
     assert.is_nil(err)
 
@@ -83,7 +83,7 @@ describe("execute()", function()
     local bundled, err = tracebundler.execute(function()
       return require("tracebundler.testdata.assign_package_loaded")
     end, {
-      path_filter = helper.path_filter,
+      trace = { path_filter = helper.path_filter },
     })
     assert.is_nil(err)
 
@@ -104,7 +104,7 @@ describe("execute()", function()
     local bundled, err = tracebundler.execute(function()
       return dofile(_G._test_path)
     end, {
-      path_filter = helper.path_filter,
+      trace = { path_filter = helper.path_filter },
       bundle = { enabled_file_loader = true },
     })
     assert.is_nil(err)
@@ -133,7 +133,7 @@ describe("execute()", function()
     local bundled, err = tracebundler.execute(function()
       return loadfile(_G._test_path)()
     end, {
-      path_filter = helper.path_filter,
+      trace = { path_filter = helper.path_filter },
       bundle = { enabled_file_loader = true },
     })
     assert.is_nil(err)

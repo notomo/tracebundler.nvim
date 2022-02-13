@@ -44,11 +44,11 @@ function M.all(self)
   return self._entrypoint, { unpack(raw_traces, 2) } -- 2 to exclude own trace
 end
 
-function M.execute(f, opts)
-  vim.validate({ f = { f, "function" }, opts = { opts, "table" } })
+function M.execute(f, trace_opts)
+  vim.validate({ f = { f, "function" }, trace_opts = { trace_opts, "table" } })
 
   local entrypoint_path = M._path(debug.getinfo(f))
-  local traces = M.new(opts.path_filter, Trace.new(entrypoint_path))
+  local traces = M.new(trace_opts.path_filter, Trace.new(entrypoint_path))
 
   local original_hook = debug.gethook()
   debug.sethook(function()

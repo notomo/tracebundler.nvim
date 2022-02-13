@@ -1,9 +1,11 @@
 local M = {}
 
 M.default = {
-  path_filter = function()
-    return true
-  end,
+  trace = {
+    path_filter = function()
+      return true
+    end,
+  },
   bundle = {
     enabled_file_loader = false,
   },

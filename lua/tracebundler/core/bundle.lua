@@ -20,15 +20,20 @@ local require = function(name)
   _tracebundler_loaded[name] = result or package.loaded[name] or true
   return _tracebundler_loaded[name]
 end
+]]
+
+  if bundle_opts.enabled_file_loader then
+    bundled = bundled
+      .. [[
 
 local _tracebundler_file = {}
 
 local global_dofile = dofile
-local dofile = function(name)
-  if not name then
+local dofile = function(path)
+  if not path then
     return global_dofile()
   end
-  local f = _tracebundler_file[name]
+  local f = _tracebundler_file[path]
   if not f then
     return global_dofile()
   end
@@ -36,17 +41,18 @@ local dofile = function(name)
 end
 
 local global_loadfile = loadfile
-local loadfile = function(name)
-  if not name then
+local loadfile = function(path)
+  if not path then
     return global_loadfile()
   end
-  local f = _tracebundler_file[name]
+  local f = _tracebundler_file[path]
   if not f then
     return global_loadfile()
   end
   return f
 end
 ]]
+  end
 
   local entrypoint, others = traces:all()
   for _, trace in ipairs(others) do
