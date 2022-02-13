@@ -41,6 +41,32 @@ local require = function(name)
   return _tracebundler_loaded[name]
 end
 
+local _tracebundler_file = {}
+
+local global_dofile = dofile
+local dofile = function(name)
+  if not name then
+    return global_dofile()
+  end
+  local f = _tracebundler_file[name]
+  if not f then
+    return global_dofile()
+  end
+  return f()
+end
+
+local global_loadfile = loadfile
+local loadfile = function(name)
+  if not name then
+    return global_loadfile()
+  end
+  local f = _tracebundler_file[name]
+  if not f then
+    return global_loadfile()
+  end
+  return f
+end
+
 _tracebundler_require["tracebundler.example"] = function(...)
     return require("tracebundler.testdata.example").entry()
 end
@@ -56,7 +82,6 @@ _tracebundler_require["tracebundler.testdata.example.init"] = function(...)
 
   return M
 end
-
 _tracebundler_require["tracebundler.testdata.example"] = _tracebundler_require["tracebundler.testdata.example.init"]
 
 _tracebundler_require["tracebundler.testdata.example.used"] = function(...)

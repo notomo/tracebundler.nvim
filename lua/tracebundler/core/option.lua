@@ -4,6 +4,9 @@ M.default = {
   path_filter = function()
     return true
   end,
+  bundle = {
+    enabled_file_loader = false,
+  },
 }
 
 function M.new(raw_opts)

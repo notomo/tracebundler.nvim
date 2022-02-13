@@ -91,4 +91,62 @@ describe("execute()", function()
     assert.is_nil(load_err)
     assert.is_same("assign_package_loaded", f())
   end)
+
+  it("returns chunk that can emulate dofile", function()
+    local path = vim.fn.tempname()
+    do
+      local tmp = io.open(path, "w")
+      tmp:write([[return 8888]])
+      tmp:close()
+    end
+    _G._test_path = path
+
+    local bundled, err = tracebundler.execute(function()
+      return dofile(_G._test_path)
+    end, {
+      path_filter = helper.path_filter,
+      bundle = { enabled_file_loader = true },
+    })
+    assert.is_nil(err)
+
+    local f, load_err = loadstring(bundled)
+    assert.is_nil(load_err)
+    assert.is_same(8888, f())
+
+    do
+      local tmp = io.open(path, "w")
+      tmp:write([[return 9999]])
+      tmp:close()
+    end
+    assert.is_same(8888, f())
+  end)
+
+  it("returns chunk that can emulate loadfile", function()
+    local path = vim.fn.tempname()
+    do
+      local tmp = io.open(path, "w")
+      tmp:write([[return 8888]])
+      tmp:close()
+    end
+    _G._test_path = path
+
+    local bundled, err = tracebundler.execute(function()
+      return loadfile(_G._test_path)()
+    end, {
+      path_filter = helper.path_filter,
+      bundle = { enabled_file_loader = true },
+    })
+    assert.is_nil(err)
+
+    local f, load_err = loadstring(bundled)
+    assert.is_nil(load_err)
+    assert.is_same(8888, f())
+
+    do
+      local tmp = io.open(path, "w")
+      tmp:write([[return 9999]])
+      tmp:close()
+    end
+    assert.is_same(8888, f())
+  end)
 end)

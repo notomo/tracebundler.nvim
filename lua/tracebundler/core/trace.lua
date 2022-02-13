@@ -5,7 +5,7 @@ M.__index = M
 
 function M.new(path, is_entrypoint, calls)
   local tbl = {
-    _path = path,
+    path = path,
     _is_entrypoint = is_entrypoint,
     _calls = calls or Calls.new(),
   }
@@ -14,11 +14,11 @@ end
 
 function M.add(self, name, current_row, first_row, last_row)
   local calls = self._calls:add(name, current_row, first_row, last_row)
-  return M.new(self._path, self._is_entrypoint, calls)
+  return M.new(self.path, self._is_entrypoint, calls)
 end
 
 function M.lines(self)
-  local f = io.open(self._path, "r")
+  local f = io.open(self.path, "r")
   if not f then
     return nil
   end
@@ -33,7 +33,7 @@ function M.lines(self)
 end
 
 function M.module(self)
-  local path = self._path:gsub("\\", "/")
+  local path = self.path:gsub("\\", "/")
   local relative = vim.split(path, "/lua/")[2]
   if not relative then
     return ""

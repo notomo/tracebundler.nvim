@@ -8,7 +8,7 @@ function ReturnValue.execute(f, raw_opts)
     -- For tracing even if the code causes error.
     require("tracebundler.lib.message").warn(err)
   end
-  return require("tracebundler.core.bundle").bundle(traces:all())
+  return require("tracebundler.core.bundle").bundle(traces:all(), opts.bundle)
 end
 
 return ReturnValue:methods()

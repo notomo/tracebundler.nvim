@@ -37,6 +37,13 @@ require("genvdoc").generate(full_plugin_name, {
           local descriptions = {
             path_filter = [[(function | nil): if return true, the chunk includes the file.
     default: `function(file_path) return true end`]],
+            bundle = {
+              text = [[(table | nil): bundle setting]],
+              children = {
+                enabled_file_loader = [[if true, chunk supports dofile and loadfile.
+    default: %s]],
+              },
+            },
           }
           local default = require("tracebundler.core.option").default
           local keys = vim.tbl_keys(default)
