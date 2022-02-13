@@ -14,17 +14,36 @@ execute({f}, {opts})                                  *tracebundler.execute()*
   Return: ~
     (string) a lua chunk
 
+bundle({traces}, {bundle_opts})                        *tracebundler.bundle()*
+  Returns as a bundled lua chunk string.
+  Mainly use in |tracebundler.nvim-trace-opts| callback.
+
+  Parameters: ~
+    {traces} (table) trace info that is callback argument.
+    {bundle_opts} (table|nil) |tracebundler.nvim-bundle-opts|
+
+  Return: ~
+    (string) a lua chunk
+
 ==============================================================================
 TYPES                                                *tracebundler.nvim-TYPES*
 
 options                                               *tracebundler.nvim-opts*
 
-- {bundle} (table): bundle setting
-  - {enabled_file_loader} (boolean): if true, chunk supports dofile, loadfile.
-      default: false
-- {trace} (table): trace setting
-  - {path_filter} (function): if return true, the chunk includes the file.
-      default: `function(file_path) return true end`
+- {bundle} (table): |tracebundler.nvim-bundle-opts|
+- {trace} (table): |tracebundler.nvim-trace-opts|
+
+bundle options                                 *tracebundler.nvim-bundle-opts*
+
+- {enabled_file_loader} (boolean): if true, chunk supports dofile, loadfile.
+    default: false
+
+trace options                                   *tracebundler.nvim-trace-opts*
+
+- {callback} (function): called after every trace.
+    default: `function(traces) end`
+- {path_filter} (function): if return true, the chunk includes the file.
+    default: `function(file_path) return true end`
 
 ==============================================================================
 EXAMPLES                                          *tracebundler.nvim-EXAMPLES*

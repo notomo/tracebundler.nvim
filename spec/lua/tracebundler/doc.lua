@@ -33,20 +33,8 @@ require("genvdoc").generate(full_plugin_name, {
         local opts_text
         do
           local descriptions = {
-            trace = {
-              text = [[(table): trace setting]],
-              children = {
-                path_filter = [[(function): if return true, the chunk includes the file.
-    default: `function(file_path) return true end`]],
-              },
-            },
-            bundle = {
-              text = [[(table): bundle setting]],
-              children = {
-                enabled_file_loader = [[(boolean): if true, chunk supports dofile, loadfile.
-    default: %s]],
-              },
-            },
+            trace = [[(table): |tracebundler.nvim-trace-opts|]],
+            bundle = [[(table): |tracebundler.nvim-bundle-opts|]],
           }
           local default = require("tracebundler.core.option").default
           local keys = vim.tbl_keys(default)
@@ -54,8 +42,36 @@ require("genvdoc").generate(full_plugin_name, {
           opts_text = table.concat(lines, "\n")
         end
 
+        local trace_opts_text
+        do
+          local descriptions = {
+            path_filter = [[(function): if return true, the chunk includes the file.
+    default: `function(file_path) return true end`]],
+            callback = [[(function): called after every trace.
+    default: `function(traces) end`]],
+          }
+          local default = require("tracebundler.core.option").default.trace
+          local keys = vim.tbl_keys(default)
+          local lines = util.each_keys_description(keys, descriptions, default)
+          trace_opts_text = table.concat(lines, "\n")
+        end
+
+        local bundle_opts_text
+        do
+          local descriptions = {
+            enabled_file_loader = [[(boolean): if true, chunk supports dofile, loadfile.
+    default: %s]],
+          }
+          local default = require("tracebundler.core.option").default.bundle
+          local keys = vim.tbl_keys(default)
+          local lines = util.each_keys_description(keys, descriptions, default)
+          bundle_opts_text = table.concat(lines, "\n")
+        end
+
         return util.sections(ctx, {
           { name = "options", tag_name = "opts", text = opts_text },
+          { name = "bundle options", tag_name = "bundle-opts", text = bundle_opts_text },
+          { name = "trace options", tag_name = "trace-opts", text = trace_opts_text },
         })
       end,
     },

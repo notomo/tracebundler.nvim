@@ -149,4 +149,46 @@ describe("execute()", function()
     end
     assert.is_same(8888, f())
   end)
+
+  it("can set callback for every trace", function()
+    local called = false
+    local _, err = tracebundler.execute(function()
+      return 8888
+    end, {
+      trace = {
+        path_filter = helper.path_filter,
+        callback = function()
+          called = true
+        end,
+      },
+    })
+    assert.is_nil(err)
+
+    assert.is_true(called)
+  end)
+end)
+
+describe("bundle()", function()
+  before_each(helper.before_each)
+  after_each(helper.after_each)
+
+  it("can bundle traces from callback argument", function()
+    local bundled_by_callback
+    local bundled, err = tracebundler.execute(function()
+      return 8888
+    end, {
+      trace = {
+        path_filter = helper.path_filter,
+        callback = function(traces)
+          bundled_by_callback = tracebundler.bundle(traces)
+        end,
+      },
+    })
+    assert.is_nil(err)
+    assert.is_same(bundled, bundled_by_callback)
+
+    local f, load_err = loadstring(bundled_by_callback)
+    assert.is_nil(load_err)
+    assert.is_same(8888, f())
+  end)
 end)

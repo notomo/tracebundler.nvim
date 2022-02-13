@@ -11,4 +11,9 @@ function ReturnValue.execute(f, raw_opts)
   return require("tracebundler.core.bundle").bundle(traces, opts.bundle)
 end
 
+function ReturnValue.bundle(traces, raw_bundle_opts)
+  local bundle_opts = require("tracebundler.core.option").new_bundle_opts(raw_bundle_opts)
+  return require("tracebundler.core.bundle").bundle(traces, bundle_opts)
+end
+
 return ReturnValue:methods()

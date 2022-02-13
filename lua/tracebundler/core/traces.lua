@@ -54,6 +54,7 @@ function M.execute(f, trace_opts)
   debug.sethook(function()
     local info = debug.getinfo(2)
     traces = traces:add(info)
+    trace_opts.callback(traces)
   end, "l")
 
   local ok, err = pcall(f)
