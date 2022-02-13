@@ -25,9 +25,11 @@ local lines = vim.split(bundled, "\n", true)
 vim.api.nvim_buf_set_lines(bufnr, 0, -1, false, lines)
 vim.bo[bufnr].filetype = "lua"
 vim.cmd([[buffer ]] .. bufnr)
+```
 
--- The following is the bundled chunk:
+The following is the bundled chunk.
 
+```lua
 local _tracebundler_require = {}
 local _tracebundler_loaded = {}
 
