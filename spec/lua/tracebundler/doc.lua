@@ -60,6 +60,8 @@ require("genvdoc").generate(full_plugin_name, {
           local descriptions = {
             enabled_file_loader = [[(boolean): if true, chunk supports dofile, loadfile.
     default: %s]],
+            traced_marker = [[(string): if not empty, adds to traced line as comment.
+    default: %s]],
           }
           local default = require("tracebundler.core.option").default.bundle
           local keys = vim.tbl_keys(default)

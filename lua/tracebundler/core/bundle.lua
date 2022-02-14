@@ -66,13 +66,16 @@ end
 %s
 local _tracebundler_entrypoint = function()
 %send
-return _tracebundler_entrypoint()]=]):format(bundled, M._indent(entrypoint:ranged_lines(), 0))
+return _tracebundler_entrypoint()]=]):format(
+    bundled,
+    M._indent(entrypoint:ranged_lines(bundle_opts.traced_marker), 0)
+  )
 
   return bundled
 end
 
 function M._bundle_one(trace, bundle_opts)
-  local lines = trace:lines()
+  local lines = trace:lines(bundle_opts.traced_marker)
   if not lines then
     return nil
   end

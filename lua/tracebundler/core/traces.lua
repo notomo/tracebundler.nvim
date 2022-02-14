@@ -1,4 +1,5 @@
 local Trace = require("tracebundler.core.trace")
+local vim = vim
 
 local M = {}
 M.__index = M

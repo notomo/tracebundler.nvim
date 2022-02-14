@@ -49,30 +49,37 @@ local require = function(name)
 end
 
 _tracebundler_require["tracebundler.testdata.example.init"] = function(...)
-  local M = {}
+  local M = {} -- TRACED
 
-  function M.entry()
-    local used = require("tracebundler.testdata.example.used").new()
-    require("tracebundler.testdata.example.ignored").start()
-    return used
-  end
+  function M.entry() -- TRACED
+    local used = require("tracebundler.testdata.example.used").new() -- TRACED
+    require("tracebundler.testdata.example.ignored").start() -- TRACED
+    return used -- TRACED
+  end -- TRACED
 
-  return M
+  return M -- TRACED
 end
 _tracebundler_require["tracebundler.testdata.example"] = _tracebundler_require["tracebundler.testdata.example.init"]
 
 _tracebundler_require["tracebundler.testdata.example.used"] = function(...)
-  local M = {}
+  local M = {} -- TRACED
 
-  function M.new()
+  function M.new() -- TRACED
+    if false then -- TRACED
+      return {}
+    end
+    return {} -- TRACED
+  end -- TRACED
+
+  function M.unused() -- TRACED
     return {}
-  end
+  end -- TRACED
 
-  return M
+  return M -- TRACED
 end
 
 local _tracebundler_entrypoint = function()
-  return require("tracebundler.testdata.example").entry()
+  return require("tracebundler.testdata.example").entry() -- TRACED
 end
 return _tracebundler_entrypoint()
 ```

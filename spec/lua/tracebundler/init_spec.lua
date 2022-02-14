@@ -191,4 +191,32 @@ describe("bundle()", function()
     assert.is_nil(load_err)
     assert.is_same(8888, f())
   end)
+
+  it("adds marker to traced line", function()
+    local bundled, err = tracebundler.execute(function()
+      if false then
+        return 9999
+      end
+      return 8888
+    end, {
+      trace = { path_filter = helper.path_filter },
+      bundle = { traced_marker = " TEST" },
+    })
+    assert.is_nil(err)
+
+    assert.matches("return 8888 %-%- TEST", bundled)
+    assert.no.matches("return 9999 %-%- TEST", bundled)
+  end)
+
+  it("can disable traced marker", function()
+    local bundled, err = tracebundler.execute(function()
+      return 8888
+    end, {
+      trace = { path_filter = helper.path_filter },
+      bundle = { traced_marker = "" },
+    })
+    assert.is_nil(err)
+
+    assert.no.matches("return 8888 %-%- TEST", bundled)
+  end)
 end)

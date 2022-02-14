@@ -9,6 +9,7 @@ M.default = {
   },
   bundle = {
     enabled_file_loader = false,
+    traced_marker = " TRACED",
   },
 }
 

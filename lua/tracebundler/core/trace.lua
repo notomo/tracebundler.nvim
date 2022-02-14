@@ -17,18 +17,31 @@ function M.add(self, info)
   return M.new(self.path, calls)
 end
 
-function M.lines(self)
+function M.lines(self, traced_marker)
+  vim.validate({ traced_marker = { traced_marker, "string" } })
   local f = io.open(self.path, "r")
   if not f then
     return nil
   end
   local content = f:read("*a")
   f:close()
-  return vim.split(content, "\n", true)
+  local lines = vim.split(content, "\n", true)
+  if traced_marker == "" then
+    return lines
+  end
+
+  local i = 0
+  return vim.tbl_map(function(line)
+    i = i + 1
+    if not self._calls:is_traced(i) then
+      return line
+    end
+    return line .. " --" .. traced_marker
+  end, lines)
 end
 
-function M.ranged_lines(self)
-  local lines = self:lines()
+function M.ranged_lines(self, traced_marker)
+  local lines = self:lines(traced_marker)
   return self._calls:ranged(lines)
 end
 
