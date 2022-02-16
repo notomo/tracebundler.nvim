@@ -17,6 +17,7 @@ end, {
   },
   bundle = {
     enalbed_file_loader = false,
+    traced_marker = " TRACED",
   },
 })
 
