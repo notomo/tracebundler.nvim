@@ -80,7 +80,18 @@ function M._bundle_one(trace, bundle_opts)
     return nil
   end
 
+  local bundled
   local module_path = trace:module()
+  if module_path then
+    bundled = M._bundle_require(trace, lines, module_path, bundle_opts)
+  else
+    bundled = M._bundle_file(trace, lines, bundle_opts)
+  end
+
+  return bundled .. "\n"
+end
+
+function M._bundle_require(trace, lines, module_path, bundle_opts)
   local bundled = ([=[
 
 _tracebundler_require["%s"] = function(...)
@@ -99,7 +110,17 @@ _tracebundler_require["%s"] = _tracebundler_require["%s"]]=]):format(bundled, al
 _tracebundler_file["%s"] = _tracebundler_require["%s"]]=]):format(bundled, trace.path, module_path)
   end
 
-  return bundled .. "\n"
+  return bundled
+end
+
+function M._bundle_file(trace, lines, bundle_opts)
+  if not bundle_opts.enabled_file_loader then
+    return ""
+  end
+  return ([=[
+
+_tracebundler_file["%s"] = function(...)
+%send]=]):format(trace.path, M._indent(lines, 2))
 end
 
 function M._indent(lines, depth)

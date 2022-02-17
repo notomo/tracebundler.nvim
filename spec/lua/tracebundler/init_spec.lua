@@ -219,4 +219,27 @@ describe("bundle()", function()
 
     assert.no.matches("return 8888 %-%- TEST", bundled)
   end)
+
+  it("can bundle file executed by runtime command", function()
+    local bundled, err = tracebundler.execute(function()
+      vim.cmd([[runtime spec/testdata/source.lua]])
+      return "source"
+    end, {
+      trace = {
+        path_filter = helper.path_filter,
+      },
+      bundle = {
+        enabled_file_loader = true,
+        traced_marker = " TEST",
+      },
+    })
+    assert.is_nil(err)
+
+    assert.matches("spec/testdata/source.lua", bundled)
+    assert.matches("return 8888 %-%- TEST", bundled)
+
+    local f, load_err = loadstring(bundled)
+    assert.is_nil(load_err)
+    assert.is_same("source", f())
+  end)
 end)
