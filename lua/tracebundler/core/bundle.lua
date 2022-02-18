@@ -81,46 +81,49 @@ function M._bundle_one(trace, bundle_opts)
   end
 
   local bundled
-  local module_path = trace:module()
-  if module_path then
-    bundled = M._bundle_require(trace, lines, module_path, bundle_opts)
+  local traced_module = require("tracebundler.core.module").new(trace.path)
+  if traced_module then
+    bundled = M._bundle_require(traced_module, lines, bundle_opts)
   else
-    bundled = M._bundle_file(trace, lines, bundle_opts)
+    bundled = M._bundle_file(trace.path, lines, bundle_opts)
   end
 
   return bundled .. "\n"
 end
 
-function M._bundle_require(trace, lines, module_path, bundle_opts)
+function M._bundle_require(traced_module, lines, bundle_opts)
   local bundled = ([=[
 
 _tracebundler_require["%s"] = function(...)
-%send]=]):format(module_path, M._indent(lines, 2))
+%send]=]):format(traced_module.name, M._indent(lines, 2))
 
-  local alias_module = trace:alias_module()
-  if alias_module then
+  if traced_module.alias then
     bundled = ([=[
 %s
-_tracebundler_require["%s"] = _tracebundler_require["%s"]]=]):format(bundled, alias_module, module_path)
+_tracebundler_require["%s"] = _tracebundler_require["%s"]]=]):format(
+      bundled,
+      traced_module.alias,
+      traced_module.name
+    )
   end
 
   if bundle_opts.enabled_file_loader then
     bundled = ([=[
 %s
-_tracebundler_file["%s"] = _tracebundler_require["%s"]]=]):format(bundled, trace.path, module_path)
+_tracebundler_file["%s"] = _tracebundler_require["%s"]]=]):format(bundled, traced_module.path, traced_module.name)
   end
 
   return bundled
 end
 
-function M._bundle_file(trace, lines, bundle_opts)
+function M._bundle_file(path, lines, bundle_opts)
   if not bundle_opts.enabled_file_loader then
     return ""
   end
   return ([=[
 
 _tracebundler_file["%s"] = function(...)
-%send]=]):format(trace.path, M._indent(lines, 2))
+%send]=]):format(path, M._indent(lines, 2))
 end
 
 function M._indent(lines, depth)

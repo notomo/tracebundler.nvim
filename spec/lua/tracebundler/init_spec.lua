@@ -242,4 +242,25 @@ describe("bundle()", function()
     assert.is_nil(load_err)
     assert.is_same("source", f())
   end)
+
+  it("can bundle even if non-neovim-lua file", function()
+    -- use package.path ./?.lua
+    local bundled, err = tracebundler.execute(function()
+      return require("spec.testdata.source")
+    end, {
+      trace = { path_filter = helper.path_filter },
+    })
+    assert.is_nil(err)
+
+    do
+      local f, load_err = loadstring(bundled)
+      assert.is_nil(load_err)
+      assert.is_same(8888, f())
+    end
+    do
+      local f, load_err = loadstring(bundled:gsub("8888", "9999"))
+      assert.is_nil(load_err)
+      assert.is_same(9999, f())
+    end
+  end)
 end)
