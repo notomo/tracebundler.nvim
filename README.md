@@ -36,11 +36,14 @@ local _tracebundler_loaded = {}
 
 local global_require = require
 local require = function(name)
+  if not name then
+    return global_require(name)
+  end
   local loaded = _tracebundler_loaded[name]
   if loaded then
     return loaded
   end
-  local f = _tracebundler_require[name]
+  local f = _tracebundler_require[name:gsub("/", "%.")]
   if not f then
     return global_require(name)
   end

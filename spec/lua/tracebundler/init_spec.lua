@@ -20,18 +20,18 @@ describe("execute()", function()
 
   it("returns chunk that does not use global require() even if input function lncludes require()", function()
     local bundled, err = tracebundler.execute(function()
-      return require("tracebundler.testdata.test1")
+      return require("tracebundler.testdata.test")
     end, {
       trace = { path_filter = helper.path_filter },
     })
     assert.is_nil(err)
 
-    package.loaded["tracebundler.testdata.test1"] = nil
+    package.loaded["tracebundler.testdata.test"] = nil
 
     local f, load_err = loadstring(bundled)
     assert.is_nil(load_err)
-    assert.is_same("test1", f())
-    assert.is_nil(package.loaded["tracebundler.testdata.test1"])
+    assert.is_same(8888, f())
+    assert.is_nil(package.loaded["tracebundler.testdata.test"])
   end)
 
   it("returns chunk that can require() by omitting .init", function()
@@ -247,6 +247,26 @@ describe("bundle()", function()
     -- use package.path ./?.lua
     local bundled, err = tracebundler.execute(function()
       return require("spec.testdata.source")
+    end, {
+      trace = { path_filter = helper.path_filter },
+    })
+    assert.is_nil(err)
+
+    do
+      local f, load_err = loadstring(bundled)
+      assert.is_nil(load_err)
+      assert.is_same(8888, f())
+    end
+    do
+      local f, load_err = loadstring(bundled:gsub("8888", "9999"))
+      assert.is_nil(load_err)
+      assert.is_same(9999, f())
+    end
+  end)
+
+  it("returns chunk that can require by slash separator", function()
+    local bundled, err = tracebundler.execute(function()
+      return require("tracebundler/testdata/test")
     end, {
       trace = { path_filter = helper.path_filter },
     })
