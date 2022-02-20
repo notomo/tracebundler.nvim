@@ -45,28 +45,4 @@ function M.ranged_lines(self, traced_marker)
   return self._calls:ranged(lines)
 end
 
-function M.module(self)
-  local path = self.path:gsub("\\", "/")
-  local relative = vim.split(path, "/lua/")[2]
-  if not relative then
-    return nil
-  end
-  relative = relative:gsub("%.lua$", "")
-  relative = relative:gsub("/", ".")
-  return relative
-end
-
-local suffix = ".init"
-function M.alias_module(self)
-  local module = self:module()
-  if not module then
-    return nil
-  end
-  if not vim.endswith(module, suffix) then
-    return nil
-  end
-  local alias = module:sub(1, #module - #suffix)
-  return alias
-end
-
 return M
