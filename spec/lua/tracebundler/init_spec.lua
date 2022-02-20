@@ -20,18 +20,18 @@ describe("execute()", function()
 
   it("returns chunk that does not use global require() even if input function lncludes require()", function()
     local bundled, err = tracebundler.execute(function()
-      return require("tracebundler.testdata.test")
+      return require("tracebundler.testdata.number")
     end, {
       trace = { path_filter = helper.path_filter },
     })
     assert.is_nil(err)
 
-    package.loaded["tracebundler.testdata.test"] = nil
+    package.loaded["tracebundler.testdata.number"] = nil
 
     local f, load_err = loadstring(bundled)
     assert.is_nil(load_err)
     assert.is_same(8888, f())
-    assert.is_nil(package.loaded["tracebundler.testdata.test"])
+    assert.is_nil(package.loaded["tracebundler.testdata.number"])
   end)
 
   it("returns chunk that can require() by omitting .init", function()
@@ -222,7 +222,7 @@ describe("bundle()", function()
 
   it("can bundle file executed by runtime command", function()
     local bundled, err = tracebundler.execute(function()
-      vim.cmd([[runtime spec/testdata/source.lua]])
+      vim.cmd([[runtime spec/lua/tracebundler/testdata/source.lua]])
       return "source"
     end, {
       trace = {
@@ -235,7 +235,7 @@ describe("bundle()", function()
     })
     assert.is_nil(err)
 
-    assert.matches("spec/testdata/source.lua", bundled)
+    assert.matches("spec/lua/tracebundler/testdata/source.lua", bundled)
     assert.matches("return 8888 %-%- TEST", bundled)
 
     local f, load_err = loadstring(bundled)
@@ -246,7 +246,7 @@ describe("bundle()", function()
   it("can bundle even if non-neovim-lua file", function()
     -- use package.path ./?.lua
     local bundled, err = tracebundler.execute(function()
-      return require("spec.testdata.source")
+      return require("spec.lua.tracebundler.testdata.source")
     end, {
       trace = { path_filter = helper.path_filter },
     })
@@ -266,7 +266,7 @@ describe("bundle()", function()
 
   it("returns chunk that can require by slash separator", function()
     local bundled, err = tracebundler.execute(function()
-      return require("tracebundler/testdata/test")
+      return require("tracebundler/testdata/number")
     end, {
       trace = { path_filter = helper.path_filter },
     })
