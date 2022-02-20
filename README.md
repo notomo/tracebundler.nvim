@@ -5,8 +5,7 @@ bundles executed files as one lua chunk for debugging.
 ## Example
 
 ```lua
-local tracebundler = require("tracebundler")
-local bundled = tracebundler.execute(function()
+local bundled = require("tracebundler").execute(function()
   return require("tracebundler.testdata.example").entry()
 end, {
   trace = {

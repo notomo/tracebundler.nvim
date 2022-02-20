@@ -69,10 +69,15 @@ require("genvdoc").generate(full_plugin_name, {
           bundle_opts_text = table.concat(lines, "\n")
         end
 
+        local chunk_text = [[
+- Bundled functions are not called if `require()` is called by Ex command.
+- Bundled `require()` is not influenced by `package.loaded[key] = nil`.]]
+
         return util.sections(ctx, {
           { name = "options", tag_name = "opts", text = opts_text },
           { name = "bundle options", tag_name = "bundle-opts", text = bundle_opts_text },
           { name = "trace options", tag_name = "trace-opts", text = trace_opts_text },
+          { name = "chunk limitation", tag_name = "chunk-limitation", text = chunk_text },
         })
       end,
     },

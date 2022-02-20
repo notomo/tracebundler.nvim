@@ -6,13 +6,16 @@ Lua module: tracebundler                      *tracebundler.nvim-tracebundler*
 execute({f}, {opts})                                  *tracebundler.execute()*
   Executes function and returns as a bundled lua chunk string.
   The chunk includes executed files.
+  Limitation:
+  - `f` cannot include upvalues.
+  - `f` must not be one line closure: `function() require('something') end`
 
   Parameters: ~
-    {f} (function) trace target (current limitation: cannot include upvalues)
+    {f} (function) trace target
     {opts} (table|nil) |tracebundler.nvim-opts|
 
   Return: ~
-    (string) a lua chunk
+    (string) a lua chunk |tracebundler.nvim-chunk-limitation|
 
 bundle({traces}, {bundle_opts})                        *tracebundler.bundle()*
   Returns as a bundled lua chunk string.
@@ -23,7 +26,7 @@ bundle({traces}, {bundle_opts})                        *tracebundler.bundle()*
     {bundle_opts} (table|nil) |tracebundler.nvim-bundle-opts|
 
   Return: ~
-    (string) a lua chunk
+    (string) a lua chunk |tracebundler.nvim-chunk-limitation|
 
 ==============================================================================
 TYPES                                                *tracebundler.nvim-TYPES*
@@ -47,12 +50,16 @@ trace options                                   *tracebundler.nvim-trace-opts*
 - {path_filter} (function): if return true, the chunk includes the file.
     default: `function(file_path) return true end`
 
+chunk limitation                          *tracebundler.nvim-chunk-limitation*
+
+- Bundled functions are not called if `require()` is called by Ex command.
+- Bundled `require()` is not influenced by `package.loaded[key] = nil`.
+
 ==============================================================================
 EXAMPLES                                          *tracebundler.nvim-EXAMPLES*
 
 >
-  local tracebundler = require("tracebundler")
-  local bundled = tracebundler.execute(function()
+  local bundled = require("tracebundler").execute(function()
     return require("tracebundler.testdata.example").entry()
   end, {
     trace = {
