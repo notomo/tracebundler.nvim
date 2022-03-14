@@ -23,6 +23,21 @@ local require = function(name)
   _tracebundler_loaded[name] = result or package.loaded[name] or true
   return _tracebundler_loaded[name]
 end
+
+local _tracebundler_original_vim = vim
+local vim = setmetatable({}, {
+  __index = function(_, k)
+    local f = _tracebundler_require["vim.shared"]
+    if not f then
+      return _tracebundler_original_vim[k]
+    end
+    local v = rawget(f("vim.shared"), k)
+    if not v then
+      return _tracebundler_original_vim[k]
+    end
+    return v
+  end,
+})
 ]]
 
   if bundle_opts.enabled_file_loader then

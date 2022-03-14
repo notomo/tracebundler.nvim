@@ -67,7 +67,11 @@ function M.execute(f, trace_opts)
 end
 
 function M._path(info)
-  return info.source:sub(2)
+  local path = info.source:sub(2)
+  if vim.startswith(path, "vim/") and vim.endswith(path, ".lua") then
+    return vim.env.VIMRUNTIME .. "/lua/" .. path
+  end
+  return path
 end
 
 return M

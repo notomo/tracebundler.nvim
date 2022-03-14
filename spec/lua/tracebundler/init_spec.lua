@@ -166,6 +166,20 @@ describe("execute()", function()
 
     assert.is_true(called)
   end)
+
+  it("returns chunk that includes vim module", function()
+    local bundled, err = tracebundler.execute(function()
+      return vim.split("a a", " ", true)
+    end, {
+      trace = { path_filter = helper.path_filter },
+    })
+    assert.is_nil(err)
+    assert.matches([=[_tracebundler_require%["vim%.shared"%] =]=], bundled)
+
+    local f, load_err = loadstring(bundled)
+    assert.is_nil(load_err)
+    assert.is_same({ "a", "a" }, f())
+  end)
 end)
 
 describe("bundle()", function()
