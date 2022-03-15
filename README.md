@@ -54,15 +54,11 @@ end
 local _tracebundler_original_vim = vim
 local vim = setmetatable({}, {
   __index = function(_, k)
-    local f = _tracebundler_require["vim.shared"]
-    if not f then
-      return _tracebundler_original_vim[k]
+    local v = rawget(require("vim.shared"), k)
+    if v then
+      return v
     end
-    local v = rawget(f("vim.shared"), k)
-    if not v then
-      return _tracebundler_original_vim[k]
-    end
-    return v
+    return _tracebundler_original_vim[k]
   end,
 })
 
