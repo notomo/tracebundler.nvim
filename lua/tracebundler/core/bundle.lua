@@ -80,12 +80,16 @@ end
 %s
 local _tracebundler_entrypoint = function()
 %send
-return _tracebundler_entrypoint()]=]):format(
-    bundled,
-    M._indent(entrypoint:ranged_lines(bundle_opts.traced_marker), 0)
-  )
+local _tracebundler = {
+  execute = _tracebundler_entrypoint,
+  modules = _tracebundler_require,
+}
+]=]):format(bundled, M._indent(entrypoint:ranged_lines(bundle_opts.traced_marker), 0))
 
-  return bundled
+  if bundle_opts.return_table then
+    return bundled .. [[return _tracebundler]]
+  end
+  return bundled .. [[return _tracebundler.execute()]]
 end
 
 function M._bundle_one(trace, bundle_opts)

@@ -40,6 +40,9 @@ bundle options                                 *tracebundler.nvim-bundle-opts*
 
 - {enabled_file_loader} (boolean): if true, chunk supports dofile, loadfile.
     default: false
+- {return_table} (boolean): if true, chunk returns {modules = {modules}, execute = {f}},
+    if false, chunk returns {f}().
+    default: false
 - {traced_marker} (string): if not empty, adds to traced line as comment.
     default: " TRACED"
 
@@ -149,7 +152,11 @@ The following is the bundled chunk.
   local _tracebundler_entrypoint = function()
     return require("tracebundler.testdata.example").entry() -- TRACED
   end
-  return _tracebundler_entrypoint()
+  local _tracebundler = {
+    execute = _tracebundler_entrypoint,
+    modules = _tracebundler_require,
+  }
+  return _tracebundler.execute()
 <
 
 ==============================================================================

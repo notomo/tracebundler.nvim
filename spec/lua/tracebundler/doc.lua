@@ -62,6 +62,9 @@ require("genvdoc").generate(full_plugin_name, {
     default: %s]],
             traced_marker = [[(string): if not empty, adds to traced line as comment.
     default: %s]],
+            return_table = [[(boolean): if true, chunk returns {modules = {modules}, execute = {f}},
+    if false, chunk returns {f}().
+    default: %s]],
           }
           local default = require("tracebundler.core.option").default.bundle
           local keys = vim.tbl_keys(default)

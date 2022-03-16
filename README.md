@@ -95,5 +95,9 @@ end
 local _tracebundler_entrypoint = function()
   return require("tracebundler.testdata.example").entry() -- TRACED
 end
-return _tracebundler_entrypoint()
+local _tracebundler = {
+  execute = _tracebundler_entrypoint,
+  modules = _tracebundler_require,
+}
+return _tracebundler.execute()
 ```
