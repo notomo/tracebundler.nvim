@@ -6,7 +6,7 @@ bundles executed files as one lua chunk for debugging.
 
 ```lua
 local bundled = require("tracebundler").execute(function()
-  return require("tracebundler.testdata.example").entry()
+  return require("tracebundler.test.data.example").entry()
 end, {
   trace = {
     path_filter = function(path)
@@ -62,20 +62,20 @@ local vim = setmetatable({}, {
   end,
 })
 
-_tracebundler_require["tracebundler.testdata.example.init"] = function(...)
+_tracebundler_require["tracebundler.test.data.example.init"] = function(...)
   local M = {} -- TRACED
 
   function M.entry() -- TRACED
-    local used = require("tracebundler.testdata.example.used").new() -- TRACED
-    require("tracebundler.testdata.example.ignored").start() -- TRACED
+    local used = require("tracebundler.test.data.example.used").new() -- TRACED
+    require("tracebundler.test.data.example.ignored").start() -- TRACED
     return used -- TRACED
   end -- TRACED
 
   return M -- TRACED
 end
-_tracebundler_require["tracebundler.testdata.example"] = _tracebundler_require["tracebundler.testdata.example.init"]
+_tracebundler_require["tracebundler.test.data.example"] = _tracebundler_require["tracebundler.test.data.example.init"]
 
-_tracebundler_require["tracebundler.testdata.example.used"] = function(...)
+_tracebundler_require["tracebundler.test.data.example.used"] = function(...)
   local M = {} -- TRACED
 
   function M.new() -- TRACED
@@ -93,7 +93,7 @@ _tracebundler_require["tracebundler.testdata.example.used"] = function(...)
 end
 
 local _tracebundler_entrypoint = function()
-  return require("tracebundler.testdata.example").entry() -- TRACED
+  return require("tracebundler.test.data.example").entry() -- TRACED
 end
 local _tracebundler = {
   execute = _tracebundler_entrypoint,

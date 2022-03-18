@@ -1,5 +1,5 @@
 local bundled = require("tracebundler").execute(function()
-  return require("tracebundler.testdata.example").entry()
+  return require("tracebundler.test.data.example").entry()
 end, {
   trace = {
     path_filter = function(path)
