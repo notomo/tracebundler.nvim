@@ -11,7 +11,7 @@ function M.new(path_filter, entrypoint, raw_traces)
     raw_traces = { raw_traces, "table", true },
   })
   local tbl = {
-    _traces = raw_traces or require("tracebundler.lib.ordered_dict").new(),
+    _traces = raw_traces or require("tracebundler.vendor.collection.ordered_dict").new(),
     _entrypoint = entrypoint,
     _path_filter = path_filter,
   }

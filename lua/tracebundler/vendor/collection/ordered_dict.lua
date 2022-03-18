@@ -6,6 +6,14 @@ function M.new()
   return setmetatable(tbl, M)
 end
 
+function M.raw(self)
+  local items = {}
+  for k, v in self:iter() do
+    table.insert(items, { key = k, value = v })
+  end
+  return items
+end
+
 function M.iter(self)
   local items = {}
   for k, v in pairs(self._data) do
@@ -37,6 +45,10 @@ function M.merge(self, tbl)
     new_dict[k] = v
   end
   return new_dict
+end
+
+function M.has(self, k)
+  return self._data[k] ~= nil
 end
 
 function M.values(self)
