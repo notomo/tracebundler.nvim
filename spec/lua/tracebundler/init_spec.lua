@@ -306,7 +306,7 @@ describe("bundle()", function()
 
   it("returns chunk that can require by slash separator", function()
     local bundled, err = tracebundler.execute(function()
-      return require("tracebundler/test.data/number")
+      return require("tracebundler/test/data/number")
     end, {
       trace = { path_filter = helper.path_filter },
     })
