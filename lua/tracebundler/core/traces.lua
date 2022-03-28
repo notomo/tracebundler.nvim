@@ -24,13 +24,13 @@ function M.add(self, info)
   end
 
   local path = M._path(info)
-  if not self._path_filter(path) then
-    return self
-  end
-
   if path == self._entrypoint.path then
     local entrypoint = self._entrypoint:add(info)
     return M.new(self._path_filter, entrypoint, self._traces)
+  end
+
+  if not self._path_filter(path) then
+    return self
   end
 
   local trace = self._traces[path] or Trace.new(path)

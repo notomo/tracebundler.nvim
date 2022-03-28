@@ -206,6 +206,23 @@ describe("execute()", function()
     assert.is_same({ "a", "a" }, bundled_tbl.execute())
     assert.is_true(called)
   end)
+
+  it("does not filter entrypoint by path_filter", function()
+    local bundled, err = tracebundler.execute(function()
+      return 8888
+    end, {
+      trace = {
+        path_filter = function()
+          return false
+        end,
+      },
+    })
+    assert.is_nil(err)
+
+    local f, load_err = loadstring(bundled)
+    assert.is_nil(load_err)
+    assert.is_same(8888, f())
+  end)
 end)
 
 describe("bundle()", function()
