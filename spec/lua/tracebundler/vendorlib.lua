@@ -1,5 +1,5 @@
 return {
-  "lua/misclib/error_handler.lua",
-  "lua/misclib/message.lua",
-  "lua/misclib/collection/ordered_dict.lua",
+  "notomo/misclib.nvim/lua/misclib/error_handler.lua",
+  "notomo/misclib.nvim/lua/misclib/message.lua",
+  "notomo/misclib.nvim/lua/misclib/collection/ordered_dict.lua",
 }

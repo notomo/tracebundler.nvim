@@ -59,6 +59,14 @@ function M.values(self)
   return values
 end
 
+function M.keys(self)
+  local keys = {}
+  for k in self:iter() do
+    table.insert(keys, k)
+  end
+  return keys
+end
+
 function M.__index(self, k)
   local method = M[k]
   if method then
