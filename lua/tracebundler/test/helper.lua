@@ -1,29 +1,29 @@
 local plugin_name = vim.split((...):gsub("%.", "/"), "/", true)[1]
-local M = require("vusted.helper")
+local helper = require("vusted.helper")
 
-M.root = M.find_plugin_root(plugin_name)
+helper.root = helper.find_plugin_root(plugin_name)
 local runtimepath = vim.o.runtimepath
 
-function M.before_each()
+function helper.before_each()
   vim.o.runtimepath = runtimepath
 end
 
-function M.after_each()
-  vim.cmd("silent %bwipeout!")
-  M.cleanup_loaded_modules(plugin_name)
+function helper.after_each()
+  helper.cleanup()
+  helper.cleanup_loaded_modules(plugin_name)
   print(" ")
 end
 
-function M.path_filter(path)
+function helper.path_filter(path)
   local matched = path:match("/busted/")
   return not matched
 end
 
-function M.set_lines(str)
+function helper.set_lines(str)
   vim.api.nvim_buf_set_lines(0, 0, -1, false, vim.split(str, "\n"))
 end
 
-function M.get_row(pattern)
+function helper.get_row(pattern)
   local saved = vim.fn.winsaveview()
   local row = vim.fn.search(pattern)
   if row == 0 then
@@ -33,13 +33,13 @@ function M.get_row(pattern)
   return row
 end
 
-function M.use_parsers()
-  vim.o.runtimepath = M.root .. "/spec/lua/nvim-treesitter," .. vim.o.runtimepath
+function helper.use_parsers()
+  vim.o.runtimepath = helper.root .. "/spec/lua/nvim-treesitter," .. vim.o.runtimepath
   vim.cmd([[runtime plugin/nvim-treesitter.*]])
 end
 
-function M.install_parser(language)
-  M.use_parsers()
+function helper.install_parser(language)
+  helper.use_parsers()
   if not vim.treesitter.language.require_language(language, nil, true) then
     vim.cmd([[TSInstallSync ]] .. language)
   end
@@ -59,4 +59,4 @@ asserts.create("test_value"):register_same(function(test)
   return { name = test.name, row = row + 1 }
 end)
 
-return M
+return helper
