@@ -279,7 +279,7 @@ describe("bundle()", function()
 
   it("can bundle file executed by runtime command", function()
     local bundled, err = tracebundler.execute(function()
-      vim.cmd([[runtime spec/lua/tracebundler/testdata/source.lua]])
+      vim.cmd.runtime([[spec/lua/tracebundler/testdata/source.lua]])
       return "source"
     end, {
       trace = {
