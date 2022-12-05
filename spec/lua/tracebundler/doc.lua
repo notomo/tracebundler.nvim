@@ -95,7 +95,10 @@ require("genvdoc").generate(full_plugin_name, {
 
 The following is the bundled chunk.
 
-%s]]):format(util.help_code_block(vim.fn.trim(content, "\n", 2)), util.help_code_block(example_result))
+%s]]):format(
+          util.help_code_block(vim.fn.trim(content, "\n", 2), { language = "lua" }),
+          util.help_code_block(example_result, { language = "lua" })
+        )
       end,
     },
   },

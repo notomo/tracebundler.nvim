@@ -61,7 +61,7 @@ chunk limitation                          *tracebundler.nvim-chunk-limitation*
 ==============================================================================
 EXAMPLES                                          *tracebundler.nvim-EXAMPLES*
 
->
+>lua
   local bundled = require("tracebundler").execute(function()
     return require("tracebundler.test.data.example").entry()
   end, {
@@ -86,7 +86,7 @@ EXAMPLES                                          *tracebundler.nvim-EXAMPLES*
 
 The following is the bundled chunk.
 
->
+>lua
   local _tracebundler_require = {}
   local _tracebundler_loaded = {}
 
