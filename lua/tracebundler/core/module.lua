@@ -29,7 +29,7 @@ function M._find_from_runtime(path)
 end
 
 function M._find_from_packages(path)
-  local lua_paths = vim.split(package.path, ";", true)
+  local lua_paths = vim.split(package.path, ";", {plain=true})
   for _, lua_path in ipairs(lua_paths) do
     local name = M._find_from_package(lua_path, path)
     if name then
@@ -39,7 +39,7 @@ function M._find_from_packages(path)
 end
 
 function M._find_from_package(lua_path, path)
-  local prefix, suffix = unpack(vim.split(lua_path, "?", true))
+  local prefix, suffix = unpack(vim.split(lua_path, "?", {plain=true}))
   if not vim.startswith(path, prefix) then
     return nil
   end

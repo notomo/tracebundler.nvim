@@ -14,7 +14,7 @@ end, {
 })
 
 local bufnr = vim.api.nvim_create_buf(false, true)
-local lines = vim.split(bundled, "\n", true)
+local lines = vim.split(bundled, "\n", { plain = true })
 vim.api.nvim_buf_set_lines(bufnr, 0, -1, false, lines)
 vim.bo[bufnr].filetype = "lua"
 vim.cmd.buffer(bufnr)
