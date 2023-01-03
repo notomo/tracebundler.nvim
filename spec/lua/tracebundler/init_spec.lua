@@ -169,7 +169,7 @@ describe("execute()", function()
 
   it("returns chunk that includes vim module", function()
     local bundled, err = tracebundler.execute(function()
-      return vim.split("a a", " ", {plain=true})
+      return vim.split("a a", " ", { plain = true })
     end, {
       trace = { path_filter = helper.path_filter },
     })
@@ -182,7 +182,7 @@ describe("execute()", function()
 
   it("returns chunk that uses vim module", function()
     local bundled, err = tracebundler.execute(function()
-      return vim.split("a a", " ", {plain=true})
+      return vim.split("a a", " ", { plain = true })
     end, {
       trace = { path_filter = helper.path_filter },
       bundle = { return_table = true },

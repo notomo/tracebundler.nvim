@@ -25,7 +25,7 @@ function M.lines(self, traced_marker)
   end
   local content = f:read("*a")
   f:close()
-  local lines = vim.split(content, "\n", {plain=true})
+  local lines = vim.split(content, "\n", { plain = true })
   if traced_marker == "" then
     return lines
   end
