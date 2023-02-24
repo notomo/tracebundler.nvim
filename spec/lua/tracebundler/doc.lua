@@ -20,66 +20,29 @@ require("genvdoc").generate(full_plugin_name, {
         return "Lua module: " .. group
       end,
       group = function(node)
-        if not node.declaration then
+        if node.declaration == nil or node.declaration.type ~= "function" then
           return nil
         end
         return node.declaration.module
       end,
     },
     {
-      name = "TYPES",
+      name = "STRUCTURE",
+      group = function(node)
+        if node.declaration == nil or node.declaration.type ~= "class" then
+          return nil
+        end
+        return "STRUCTURE"
+      end,
+    },
+    {
+      name = "LIMITATION",
       body = function(ctx)
-        local opts_text
-        do
-          local descriptions = {
-            trace = [[(table): |tracebundler.nvim-trace-opts|]],
-            bundle = [[(table): |tracebundler.nvim-bundle-opts|]],
-          }
-          local default = require("tracebundler.core.option").default
-          local keys = vim.tbl_keys(default)
-          local lines = util.each_keys_description(keys, descriptions, default)
-          opts_text = table.concat(lines, "\n")
-        end
-
-        local trace_opts_text
-        do
-          local descriptions = {
-            path_filter = [[(function): if return true, the chunk includes the file.
-    default: `function(file_path) return true end`]],
-            callback = [[(function): called after every trace.
-    default: `function(traces) end`]],
-          }
-          local default = require("tracebundler.core.option").default.trace
-          local keys = vim.tbl_keys(default)
-          local lines = util.each_keys_description(keys, descriptions, default)
-          trace_opts_text = table.concat(lines, "\n")
-        end
-
-        local bundle_opts_text
-        do
-          local descriptions = {
-            enabled_file_loader = [[(boolean): if true, chunk supports dofile, loadfile.
-    default: %s]],
-            traced_marker = [[(string): if not empty, adds to traced line as comment.
-    default: %s]],
-            return_table = [[(boolean): if true, chunk returns {modules = {modules}, execute = {f}},
-    if false, chunk returns {f}().
-    default: %s]],
-          }
-          local default = require("tracebundler.core.option").default.bundle
-          local keys = vim.tbl_keys(default)
-          local lines = util.each_keys_description(keys, descriptions, default)
-          bundle_opts_text = table.concat(lines, "\n")
-        end
-
         local chunk_text = [[
 - Bundled functions are not called if `require()` is called by Ex command.
 - Bundled `require()` is not influenced by `package.loaded[key] = nil`.]]
 
         return util.sections(ctx, {
-          { name = "options", tag_name = "opts", text = opts_text },
-          { name = "bundle options", tag_name = "bundle-opts", text = bundle_opts_text },
-          { name = "trace options", tag_name = "trace-opts", text = trace_opts_text },
           { name = "chunk limitation", tag_name = "chunk-limitation", text = chunk_text },
         })
       end,

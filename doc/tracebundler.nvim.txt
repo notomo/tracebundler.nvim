@@ -11,47 +11,47 @@ execute({f}, {opts})                                  *tracebundler.execute()*
   - `f` must not be one line closure: `function() require('something') end`
 
   Parameters: ~
-    {f} (function) trace target
-    {opts} (table|nil) |tracebundler.nvim-opts|
+    {f} (fun():any) trace target
+    {opts} (TracebundlerOption?) |TracebundlerOption|
 
   Return: ~
     (string) a lua chunk |tracebundler.nvim-chunk-limitation|
 
 bundle({traces}, {bundle_opts})                        *tracebundler.bundle()*
   Returns as a bundled lua chunk string.
-  Mainly use in |tracebundler.nvim-trace-opts| callback.
+  Mainly use in |TracebundlerTraceOption| callback.
 
   Parameters: ~
-    {traces} (table) trace info that is callback argument.
-    {bundle_opts} (table|nil) |tracebundler.nvim-bundle-opts|
+    {traces} (TracebundlerTraces) trace info that is callback argument.
+    {bundle_opts} (TracebundlerBundleOption?) |TracebundlerBundleOption|
 
   Return: ~
     (string) a lua chunk |tracebundler.nvim-chunk-limitation|
 
 ==============================================================================
-TYPES                                                *tracebundler.nvim-TYPES*
+STRUCTURE                                        *tracebundler.nvim-STRUCTURE*
 
-options                                               *tracebundler.nvim-opts*
+TracebundlerOption                                        *TracebundlerOption*
 
-- {bundle} (table): |tracebundler.nvim-bundle-opts|
-- {trace} (table): |tracebundler.nvim-trace-opts|
+- {bundle} (TracebundlerBundleOption)
+- {trace} (TracebundlerTraceOption)
 
-bundle options                                 *tracebundler.nvim-bundle-opts*
+TracebundlerBundleOption                            *TracebundlerBundleOption*
 
-- {enabled_file_loader} (boolean): if true, chunk supports dofile, loadfile.
-    default: false
-- {return_table} (boolean): if true, chunk returns {modules = {modules}, execute = {f}},
-    if false, chunk returns {f}().
-    default: false
-- {traced_marker} (string): if not empty, adds to traced line as comment.
-    default: " TRACED"
+- {enabled_file_loader} (boolean?) if true, chunk supports dofile, loadfile. default: false
+- {return_table} (boolean?) if true, chunk returns {modules = {modules}, execute = {f}}, if false, chunk returns {f}(). default: false
+- {traced_marker} (string?) if not empty, adds to traced line as comment. default: " TRACED"
 
-trace options                                   *tracebundler.nvim-trace-opts*
+TracebundlerTraceOption                              *TracebundlerTraceOption*
 
-- {callback} (function): called after every trace.
-    default: `function(traces) end`
-- {path_filter} (function): if return true, the chunk includes the file.
-    default: `function(file_path) return true end`
+- {callback} (fun(traces:TracebundlerTraces)?) called after every trace. default: `function(traces) end`
+- {path_filter} ((fun(path:string):boolean)?) if return true, the chunk includes the file. default: `function(file_path) return true end`
+
+TracebundlerTraces                                        *TracebundlerTraces*
+
+
+==============================================================================
+LIMITATION                                      *tracebundler.nvim-LIMITATION*
 
 chunk limitation                          *tracebundler.nvim-chunk-limitation*
 
