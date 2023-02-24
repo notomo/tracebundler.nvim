@@ -1,8 +1,8 @@
 local M = {}
 
 --- @class TracebundlerOption
---- @field bundle TracebundlerBundleOption
---- @field trace TracebundlerTraceOption
+--- @field bundle TracebundlerBundleOption |TracebundlerBundleOption|
+--- @field trace TracebundlerTraceOption |TracebundlerTraceOption|
 
 --- @class TracebundlerBundleOption
 --- @field enabled_file_loader boolean? if true, chunk supports dofile, loadfile. default: false

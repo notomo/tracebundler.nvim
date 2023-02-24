@@ -33,8 +33,8 @@ STRUCTURE                                        *tracebundler.nvim-STRUCTURE*
 
 TracebundlerOption                                        *TracebundlerOption*
 
-- {bundle} (TracebundlerBundleOption)
-- {trace} (TracebundlerTraceOption)
+- {bundle} (TracebundlerBundleOption) |TracebundlerBundleOption|
+- {trace} (TracebundlerTraceOption) |TracebundlerTraceOption|
 
 TracebundlerBundleOption                            *TracebundlerBundleOption*
 
