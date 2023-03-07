@@ -22,7 +22,7 @@ local M = {}
 --- - `f` must not be one line closure: `function() require('something') end`
 --- @param f fun():any trace target
 --- @param opts TracebundlerOption?: |TracebundlerOption|
---- @return string: a lua chunk |tracebundler.nvim-chunk-limitation|
+--- @return string # a lua chunk |tracebundler.nvim-chunk-limitation|
 function M.execute(f, opts)
   return require("tracebundler.command").execute(f, opts)
 end
@@ -31,7 +31,7 @@ end
 --- Mainly use in |TracebundlerTraceOption| callback.
 --- @param traces TracebundlerTraces: trace info that is callback argument.
 --- @param bundle_opts TracebundlerBundleOption?: |TracebundlerBundleOption|
---- @return string: a lua chunk |tracebundler.nvim-chunk-limitation|
+--- @return string # a lua chunk |tracebundler.nvim-chunk-limitation|
 function M.bundle(traces, bundle_opts)
   return require("tracebundler.command").bundle(traces, bundle_opts)
 end
