@@ -2,8 +2,10 @@ local util = require("genvdoc.util")
 local plugin_name = vim.env.PLUGIN_NAME
 local full_plugin_name = plugin_name .. ".nvim"
 
+pcall(require, "tracebundler") -- to load if exists
+vim.opt.runtimepath:prepend(vim.fn.getcwd())
+
 local example_path = ("./spec/lua/%s/example.lua"):format(plugin_name)
-vim.o.runtimepath = vim.fn.getcwd() .. "," .. vim.o.runtimepath
 dofile(example_path)
 local example_lines = vim.api.nvim_buf_get_lines(0, 0, -1, false)
 local example_f, err = loadstring(table.concat(example_lines, "\n"))
