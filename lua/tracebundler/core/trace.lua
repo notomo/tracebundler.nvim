@@ -31,13 +31,16 @@ function M.lines(self, traced_marker)
   end
 
   local i = 0
-  return vim.tbl_map(function(line)
-    i = i + 1
-    if not self._calls:is_traced(i) then
-      return line
-    end
-    return line .. " --" .. traced_marker
-  end, lines)
+  return vim
+    .iter(lines)
+    :map(function(line)
+      i = i + 1
+      if not self._calls:is_traced(i) then
+        return line
+      end
+      return line .. " --" .. traced_marker
+    end)
+    :totable()
 end
 
 function M.ranged_lines(self, traced_marker)
