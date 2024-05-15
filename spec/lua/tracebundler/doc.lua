@@ -52,9 +52,7 @@ require("genvdoc").generate(full_plugin_name, {
     {
       name = "EXAMPLES",
       body = function()
-        local f = io.open(example_path, "r")
-        local content = f:read("*a")
-        f:close()
+        local content = util.read_all(example_path)
         return ([[
 %s
 
@@ -70,9 +68,7 @@ The following is the bundled chunk.
 })
 
 local gen_readme = function()
-  local f = io.open(example_path, "r")
-  local exmaple = f:read("*a")
-  f:close()
+  local exmaple = util.read_all(example_path)
 
   local content = ([[
 # %s
@@ -90,8 +86,6 @@ bundles executed files as one lua chunk for debugging.
 %s
 ```]]):format(full_plugin_name, exmaple, example_result)
 
-  local readme = io.open("README.md", "w")
-  readme:write(content)
-  readme:close()
+  util.write("README.md", content)
 end
 gen_readme()
