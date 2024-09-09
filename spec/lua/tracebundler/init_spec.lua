@@ -1,5 +1,6 @@
 local helper = require("tracebundler.test.helper")
 local tracebundler = helper.require("tracebundler")
+local assert = require("assertlib").typed(assert)
 
 describe("execute()", function()
   before_each(helper.before_each)
@@ -15,7 +16,8 @@ describe("execute()", function()
 
     local f, load_err = loadstring(bundled)
     assert.is_nil(load_err)
-    assert.is_same(8888, f())
+    assert(f)
+    assert.same(8888, f())
   end)
 
   it("returns chunk that does not use global require() even if input function lncludes require()", function()
@@ -30,7 +32,8 @@ describe("execute()", function()
 
     local f, load_err = loadstring(bundled)
     assert.is_nil(load_err)
-    assert.is_same(8888, f())
+    assert(f)
+    assert.same(8888, f())
     assert.is_nil(package.loaded["tracebundler.test.data.number"])
   end)
 
@@ -44,7 +47,8 @@ describe("execute()", function()
 
     local f, load_err = loadstring(bundled)
     assert.is_nil(load_err)
-    assert.is_same("init", f())
+    assert(f)
+    assert.same("init", f())
   end)
 
   it("returns chunk that can emulate package.loaded with module returning non-nil value", function()
@@ -60,7 +64,8 @@ describe("execute()", function()
 
     local f, load_err = loadstring(bundled)
     assert.is_nil(load_err)
-    assert.is_same(8888, f())
+    assert(f)
+    assert.same(8888, f())
   end)
 
   it("returns chunk that can emulate package.loaded with module returning nil value", function()
@@ -75,8 +80,9 @@ describe("execute()", function()
 
     local f, load_err = loadstring(bundled)
     assert.is_nil(load_err)
-    assert.is_same(true, f())
-    assert.is_same(8888, _G._tracebundler_mutated)
+    assert(f)
+    assert.same(true, f())
+    assert.same(8888, _G._tracebundler_mutated)
   end)
 
   it("returns chunk that can emulate package.loaded with module assigning to package.loaded", function()
@@ -89,13 +95,15 @@ describe("execute()", function()
 
     local f, load_err = loadstring(bundled)
     assert.is_nil(load_err)
-    assert.is_same("assign_package_loaded", f())
+    assert(f)
+    assert.same("assign_package_loaded", f())
   end)
 
   it("returns chunk that can emulate dofile", function()
     local path = vim.fn.tempname()
     do
       local tmp = io.open(path, "w")
+      assert(tmp)
       tmp:write([[return 8888]])
       tmp:close()
     end
@@ -111,20 +119,23 @@ describe("execute()", function()
 
     local f, load_err = loadstring(bundled)
     assert.is_nil(load_err)
-    assert.is_same(8888, f())
+    assert(f)
+    assert.same(8888, f())
 
     do
       local tmp = io.open(path, "w")
+      assert(tmp)
       tmp:write([[return 9999]])
       tmp:close()
     end
-    assert.is_same(8888, f())
+    assert.same(8888, f())
   end)
 
   it("returns chunk that can emulate loadfile", function()
     local path = vim.fn.tempname()
     do
       local tmp = io.open(path, "w")
+      assert(tmp)
       tmp:write([[return 8888]])
       tmp:close()
     end
@@ -140,14 +151,16 @@ describe("execute()", function()
 
     local f, load_err = loadstring(bundled)
     assert.is_nil(load_err)
-    assert.is_same(8888, f())
+    assert(f)
+    assert.same(8888, f())
 
     do
       local tmp = io.open(path, "w")
+      assert(tmp)
       tmp:write([[return 9999]])
       tmp:close()
     end
-    assert.is_same(8888, f())
+    assert.same(8888, f())
   end)
 
   it("can set callback for every trace", function()
@@ -177,7 +190,8 @@ describe("execute()", function()
 
     local f, load_err = loadstring(bundled)
     assert.is_nil(load_err)
-    assert.is_same({ "a", "a" }, f())
+    assert(f)
+    assert.same({ "a", "a" }, f())
   end)
 
   it("returns chunk that uses vim module", function()
@@ -190,6 +204,8 @@ describe("execute()", function()
     assert.is_nil(err)
 
     local f, load_err = loadstring(bundled)
+    assert.is_nil(load_err)
+    assert(f)
     local bundled_tbl = f()
     assert.no.is_nil(bundled_tbl.modules["vim.shared"])
 
@@ -203,7 +219,7 @@ describe("execute()", function()
       return M
     end
     assert.is_nil(load_err)
-    assert.is_same({ "a", "a" }, bundled_tbl.execute())
+    assert.same({ "a", "a" }, bundled_tbl.execute())
     assert.is_true(called)
   end)
 
@@ -221,7 +237,8 @@ describe("execute()", function()
 
     local f, load_err = loadstring(bundled)
     assert.is_nil(load_err)
-    assert.is_same(8888, f())
+    assert(f)
+    assert.same(8888, f())
   end)
 end)
 
@@ -242,11 +259,12 @@ describe("bundle()", function()
       },
     })
     assert.is_nil(err)
-    assert.is_same(bundled, bundled_by_callback)
+    assert.same(bundled, bundled_by_callback)
 
     local f, load_err = loadstring(bundled_by_callback)
     assert.is_nil(load_err)
-    assert.is_same(8888, f())
+    assert(f)
+    assert.same(8888, f())
   end)
 
   it("adds marker to traced line", function()
@@ -261,8 +279,8 @@ describe("bundle()", function()
     })
     assert.is_nil(err)
 
-    assert.matches("return 8888 %-%- TEST", bundled)
-    assert.no.matches("return 9999 %-%- TEST", bundled)
+    assert.match("return 8888 %-%- TEST", bundled)
+    assert.no.match("return 9999 %-%- TEST", bundled)
   end)
 
   it("can disable traced marker", function()
@@ -274,7 +292,7 @@ describe("bundle()", function()
     })
     assert.is_nil(err)
 
-    assert.no.matches("return 8888 %-%- TEST", bundled)
+    assert.no.match("return 8888 %-%- TEST", bundled)
   end)
 
   it("can bundle file executed by runtime command", function()
@@ -292,12 +310,13 @@ describe("bundle()", function()
     })
     assert.is_nil(err)
 
-    assert.matches("spec/lua/tracebundler/testdata/source.lua", bundled)
-    assert.matches("return 8888 %-%- TEST", bundled)
+    assert.match("spec/lua/tracebundler/testdata/source.lua", bundled)
+    assert.match("return 8888 %-%- TEST", bundled)
 
     local f, load_err = loadstring(bundled)
     assert.is_nil(load_err)
-    assert.is_same("source", f())
+    assert(f)
+    assert.same("source", f())
   end)
 
   it("can bundle even if non-neovim-lua file", function()
@@ -312,17 +331,20 @@ describe("bundle()", function()
     do
       local f, load_err = loadstring(bundled)
       assert.is_nil(load_err)
-      assert.is_same(8888, f())
+      assert(f)
+      assert.same(8888, f())
     end
     do
       local f, load_err = loadstring(bundled:gsub("8888", "9999"))
       assert.is_nil(load_err)
-      assert.is_same(9999, f())
+      assert(f)
+      assert.same(9999, f())
     end
   end)
 
   it("returns chunk that can require by slash separator", function()
     local bundled, err = tracebundler.execute(function()
+      ---@diagnostic disable-next-line: different-requires
       return require("tracebundler/test/data/number")
     end, {
       trace = { path_filter = helper.path_filter },
@@ -332,12 +354,14 @@ describe("bundle()", function()
     do
       local f, load_err = loadstring(bundled)
       assert.is_nil(load_err)
-      assert.is_same(8888, f())
+      assert(f)
+      assert.same(8888, f())
     end
     do
       local f, load_err = loadstring(bundled:gsub("8888", "9999"))
       assert.is_nil(load_err)
-      assert.is_same(9999, f())
+      assert(f)
+      assert.same(9999, f())
     end
   end)
 end)
