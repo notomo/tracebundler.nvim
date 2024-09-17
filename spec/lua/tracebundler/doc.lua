@@ -12,6 +12,7 @@ local example_f, err = loadstring(table.concat(example_lines, "\n"))
 if err then
   error(err)
 end
+assert(example_f)
 example_f()
 local example_result = table.concat(example_lines, "\n")
 
