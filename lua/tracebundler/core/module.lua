@@ -1,7 +1,7 @@
 local M = {}
 
+--- @param path string
 function M.new(path)
-  vim.validate({ path = { path, "string" } })
   local name = M._find_from_runtime(path) or M._find_from_packages(path)
   if not name then
     return nil

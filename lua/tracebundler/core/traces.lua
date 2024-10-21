@@ -4,12 +4,10 @@ local vim = vim
 local M = {}
 M.__index = M
 
+--- @param path_filter function
+--- @param entrypoint table
+--- @param raw_traces table?
 function M.new(path_filter, entrypoint, raw_traces)
-  vim.validate({
-    path_filter = { path_filter, "function" },
-    entrypoint = { entrypoint, "table" },
-    raw_traces = { raw_traces, "table", true },
-  })
   local tbl = {
     _traces = raw_traces or require("tracebundler.vendor.misclib.collection.ordered_dict").new(),
     _entrypoint = entrypoint,
@@ -45,9 +43,9 @@ function M.all(self)
   return self._entrypoint, { unpack(raw_traces, 2) } -- 2 to exclude own trace
 end
 
+--- @param f function
+--- @param trace_opts table
 function M.execute(f, trace_opts)
-  vim.validate({ f = { f, "function" }, trace_opts = { trace_opts, "table" } })
-
   local entrypoint_path = M._path(debug.getinfo(f))
   local traces = M.new(trace_opts.path_filter, Trace.new(entrypoint_path))
 

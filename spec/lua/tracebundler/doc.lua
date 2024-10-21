@@ -17,6 +17,7 @@ example_f()
 local example_result = table.concat(example_lines, "\n")
 
 require("genvdoc").generate(full_plugin_name, {
+  source = { patterns = { ("lua/%s/init.lua"):format(plugin_name) } },
   chapters = {
     {
       name = function(group)

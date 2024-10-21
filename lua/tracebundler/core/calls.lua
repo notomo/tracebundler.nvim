@@ -21,8 +21,8 @@ function M.add(self, name, current_row, first_row, last_row)
   return M.new(calls, rows)
 end
 
+--- @param lines string[]
 function M.ranged(self, lines)
-  vim.validate({ lines = { lines, "table" } })
   local new_lines = {}
   for _, call in pairs(self._calls) do
     vim.list_extend(new_lines, call:ranged(lines))

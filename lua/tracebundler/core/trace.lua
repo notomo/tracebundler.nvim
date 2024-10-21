@@ -3,8 +3,8 @@ local Calls = require("tracebundler.core.calls")
 local M = {}
 M.__index = M
 
+--- @param path string
 function M.new(path, calls)
-  vim.validate({ path = { path, "string" } })
   local tbl = {
     path = path,
     _calls = calls or Calls.new(),
@@ -17,8 +17,8 @@ function M.add(self, info)
   return M.new(self.path, calls)
 end
 
+--- @param traced_marker string
 function M.lines(self, traced_marker)
-  vim.validate({ traced_marker = { traced_marker, "string" } })
   local f = io.open(self.path, "r")
   if not f then
     return nil
